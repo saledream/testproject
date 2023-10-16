@@ -1,0 +1,145 @@
+react hooks are functions that add state variables to functional components.
+useState is React Hook that allows youu to add state to a functional component. it returns an array with two values: the current state and a function to update it.
+
+useState hooks allows us to track state in function component 
+
+# state generally referes to data or properties that need to be tracking in the application
+
+# we have to initialize state at the top of function component 
+
+const [state, setState] = useState(initialValue) 
+this is called destructuring
+
+# initialValue is the value you want to start with 
+# state is the current state value that can be used in your component
+# The setState function can be used to update the state, triggering a re-render of your component.
+
+what can useState Hold?
+string, number,boolean,array,object,and function.
+Basically, anything that can be stored in a JavaScript Variable can be stored in a state managed by useState 
+
+updating objects and arrays in useState 
+++++++++++++++++++++++++++++++++++++++++++++
+Never directly modify an object or array stored in useState.
+instead, you should create a new update version of the object or array and call useState with the new version 
+
+const [state, setState] = useState({name:"john",age:4})
+
+const updateName = () => {
+
+    setState({...state,name:"Jane"})
+
+}
+const updateAge = () => {
+
+    setState({ ...state,age:state.age +1});
+
+}
+const [array, setArray] = useState([1,2,3,4,5]);
+
+const addItem = () => {
+
+    setArray([ ...array, 6]) ;
+    
+}
+
+
+#############################
+redux: standalone js library
+React-redux: let react component interact with a redux store by reading piece of state and dispatching action to update the store
+redux toolkit:simplifies most redux task, prevenst common mistake, and mke it easier to write redux applications.
+
+
+store: is container that holds your application's global state.
+this store which is managed my redux can not be updated directly
+
+to update to the state is to create a plain action object that describes " something that happened in the application", and the dispatch the action to the store to tell it what happened.
+when an action i s dispatched, the store runs the root reducer function, and lets it calculate the new state abased on the old state and the action.
+finally, the store notifies subscribers that the state has been updated so the UI can updated with the new data.
+
+state,action,reducers:
+==================================
+
+reducer --> function that determines what the cew state should be when something happens in the app.
+        -->  it receives two arguments, the current state and an action object describing what happened
+        action object --> has always type field, which is a string acting as unique name for the action.
+        so based on this action object type field the reducer update the state.
+
+
+
+createStore --> to create store what holds the state needed by component.
+            --> take reducer function for the update logic.
+            --> to generate the initial state and to calculate any future updates
+
+
+dispatching actions:
+    responsing to user input by crearing action objects that describe what happed, and dispatching them to the store.
+    when swe call store.dispatch(action), the store runs the reducer,calculates the updated state, and runs the subscribers to update the UI
+
+
+actions are dispatched in response to user interaction like click
+the store runs the reducer function to calculate a new state
+the UI reads the new state to display the new values.
+
+
+############################
+State describe the condition of the app at specific point in time
+the UI is rendered based on that state
+when something happens, the state is updated based on what occurred.
+The UI re-renders based on the new state.
+
+## extracting the shared state from the components, and put it into a centralized location outside the component tree. so any component can access the state or trigger actions, no matter where they are in the tree.
+
+this is the basic idea behind redux: a single centralized place to contain the global state in your application, and specific patterns to follow when updating the state to make the code predictable.
+
+## In order to update values immutably, your code must makes copies of existing objects/arrays, and then modify the copies.
+
+#Action javascript object. it is like even that describe something that happed in the application.
+# and it has a type field which must be string that gives this action a descriptive name
+# an action object can have other fields with additional information about what happened.
+# and we put that information in a field called payload.
+
+
+# reducer which receives the current state and an action object, decides how to update the state if necessary, and returns the new state: 
+# we can think of a reducer as an event listener which handles events based on the received action(event) type.
+# they should only calculate the new state based on the state and action argukments.
+# they are not allowed to modify the existing state. instead, they must make immutable updates, by copying the existing state and making changes to the copied values.
+# They must not do any asynchronous logic, calculate random values, or cause other "side effects"
+
+# reducers follows the same series of steps:
+
+    check to see if the reducer cares about this action
+        if so, make a copy of the state, update the copy with new values, and return it
+    otherwise, return the existing state unchanged.
+
+
+##### selectors
+# selector are functions that know how to extract specific piece of information from a store state value.
+
+Redux core concepts and principles
++++++++++++++++++++++++++++++++++++++++++
+Single source of Truth:
+    -> The global state of your application is stored as an object inside a single store. an given piece of data should only exist on one location, rather than being duplicated in many places.
+
+State is read-only:
+     ->  the only way to change the state is to dispatch an action, an object that describes what happend.
+     -> this way, the UI won't accidentally overwrite data, and it's easier to trace whey a state update happed.
+    
+Changes are made with Pure reducer functions:
+       ->  to specify how the state tree is update based on actions, you write reducer functions. which returns new state,
+
+##### redux data flow.
+##
+##   initial setup:
+       -> Redux store is created using a root reducer function
+       -> the store calls the root reducer once, and saves the return value as its initial state 
+       -> when the UI is first rendred, UI components access the current state of the redux store, and use that data to decide what to render.
+
+    Updates:
+         -> something happens in the app, clicking button
+         -> the app code dispatches an action to the redux store 
+         -> the store runs the reducer function again with the previous state and the current action, and saves the return values as the new state
+         -> the store notifies all parts of the UI that are subscribed that the store has been updated.
+         -> Each UI component that needs data from the store checks to see if the parts of the state they need have changed.
+
+         
